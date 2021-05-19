@@ -17,8 +17,9 @@ namespace CardGame
         public List<Player> Players { get; }
         public CardSet Deck { get; }
 
-        private Card Trump;
+        private CardSuite Trump;
         private Player activePlayer;
+
         public Player ActivePlayer
         {
             get
@@ -44,7 +45,8 @@ namespace CardGame
         public Action<CardSet> ShowCards;
         //public Func<string> Reqest;
         public Func<string, bool> YesOrNo;
-        public Func<Card, Card> UserCardChosen;
+        public Func<string, CardSuite> TrumpRequest;
+        public Player MainPlayer;
 
         public Game(Action<string> showMessage,
             Action<Player> markActivePlayer,
@@ -64,53 +66,29 @@ namespace CardGame
             
 
         }
-        public void GoGame()
-        {
-            Start();
-            for (int i = 0; i < 9; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    Move(UserCardChosen(Card),Players[j]);
-                }
-            }
-            GetWinner();
-            
-        }
 
 
         public void Start()
         {
             Deal(6);
-            ActivePlayer = TrumpDefinition();
+            MainPlayer = TrumpDefinition();
+            ActivePlayer = MainPlayer;
             Deal(3);
-            Refresh();
-            
+            Refresh();            
         }
 
         public Player TrumpDefinition()
         {
-            Trump = Deck.Pull(random.Next(0, Deck.Count));//Reqest().Length;
-            for (int i = 0; i<3;i++)
+            Trump = Deck.Pull(random.Next(0, Deck.Count)).Suite;//Reqest().Length;
+            foreach (var player in Players)
             {
-                if (YesOrNo("Do you play in this trump?"))
+                if (YesOrNo($"Do you play in {Trump}?"))
                 {
-                    return Players[i];
+                    return player;
                 }
             }
-            Card card = new Card(Trump.Suite, Trump.Figure);
-            do
-            {
-                Trump = Deck.Pull(random.Next(0, Deck.Count));
-            }
-            while (Trump.Suite == card.Suite);
-            for (int i = 0; i < 3; i++)
-            {
-                if (YesOrNo("Do you play in this trump?"))
-                {
-                    return Players[i];
-                }
-            }
+
+            Trump = TrumpRequest("What card suit do you want?");
             return Players[0];
         }
 
@@ -122,7 +100,6 @@ namespace CardGame
         public void Move(Card card, Player player)
         {
 
-
             if (!ActivePlayer.HandCards.Cards.Contains(card)) return;
             //if()
             if (Table.Count != 0)
@@ -130,13 +107,13 @@ namespace CardGame
                 if (Table.Cards[0].Suite != card.Suite && ActivePlayer.HandCards.Cards.FirstOrDefault(c => c.Suite == card.Suite) != null) return;
 
 
-                if (Trump.Suite != card.Suite && ActivePlayer.HandCards.Cards.FirstOrDefault(c => c.Suite == Trump.Suite) != null) return;
+                if (Trump != card.Suite && ActivePlayer.HandCards.Cards.FirstOrDefault(c => c.Suite == Trump) != null) return;
             }
 
             Table.Add(ActivePlayer.HandCards.Pull(card));
             player.PleyerCard = card;
 
-            if (Table.Count == 3)
+            if (Table.Count == Players.Count)
             {
                 GetInDiscardPile();
             }
@@ -164,7 +141,7 @@ namespace CardGame
             int tensCounter = 0;
             for (int i = 0; i < table.Count; i++)
             {
-                if (table[i].Suite == Trump.Suite)
+                if (table[i].Suite == Trump)
                 {
                     trumpCounter++;
                 }
@@ -180,19 +157,19 @@ namespace CardGame
                 {
                   for (int i = 0; i < Players.Count; i++) 
                   {
-                    if (Players[i].PleyerCard.Suite == Trump.Suite) return Players[i];
+                    if (Players[i].PleyerCard.Suite == Trump) return Players[i];
                   }
                 }
 
-            if(trumpCounter > 1)
+            if (trumpCounter > 1)
             {
                 int usualTrampCounter = 0;
                 for (int i = 0; i < Players.Count; i++)
                 {
-                    if (Players[i].PleyerCard.Figure != CardFigure.nine&& 
-                        Players[i].PleyerCard.Figure != CardFigure.Jack&& 
-                        Players[i].PleyerCard.Figure != CardFigure.ten&&
-                        Players[i].PleyerCard.Suite==Trump.Suite)
+                    if (Players[i].PleyerCard.Figure != CardFigure.nine &&
+                        Players[i].PleyerCard.Figure != CardFigure.Jack &&
+                        Players[i].PleyerCard.Figure != CardFigure.ten &&
+                        Players[i].PleyerCard.Suite == Trump)
                     {
                         usualTrampCounter++;
                     }
@@ -200,41 +177,41 @@ namespace CardGame
                 if (trumpCounter == usualTrampCounter)
                 {
 
-                    if (Players[0].PleyerCard.Suite == Trump.Suite && Players[1].PleyerCard.Suite == Trump.Suite)
+                    if (Players[0].PleyerCard.Suite == Trump && Players[1].PleyerCard.Suite == Trump)
                     {
-                        return Players[0].PleyerCard.Figure > Players[1].PleyerCard.Figure? Players[0] :  Players[1];
+                        return Players[0].PleyerCard.Figure > Players[1].PleyerCard.Figure ? Players[0] : Players[1];
                     }
-                    else if (Players[1].PleyerCard.Suite == Trump.Suite && Players[2].PleyerCard.Suite == Trump.Suite)
+                    else if (Players[1].PleyerCard.Suite == Trump && Players[2].PleyerCard.Suite == Trump)
                     {
-                        return Players[1].PleyerCard.Figure > Players[2].PleyerCard.Figure ?  Players[1] :  Players[2];
+                        return Players[1].PleyerCard.Figure > Players[2].PleyerCard.Figure ? Players[1] : Players[2];
                     }
-                    else if (Players[0].PleyerCard.Suite == Trump.Suite && Players[2].PleyerCard.Suite == Trump.Suite)
+                    else if (Players[0].PleyerCard.Suite == Trump && Players[2].PleyerCard.Suite == Trump)
                     {
-                        return Players[0].PleyerCard.Figure > Players[2].PleyerCard.Figure ?  Players[0] :  Players[2];
+                        return Players[0].PleyerCard.Figure > Players[2].PleyerCard.Figure ? Players[0] : Players[2];
                     }
                 }
-                else if(trumpCounter!=usualTrampCounter)
+                else if (trumpCounter != usualTrampCounter)
                 {
                     for (int i = 0; i < Players.Count; i++)
                     {
                         if (Players[i].PleyerCard.Figure == CardFigure.Jack &&
-                        Players[i].PleyerCard.Suite == Trump.Suite)
+                        Players[i].PleyerCard.Suite == Trump)
                         {
                             return Players[i];
                         }
-                        else if(Players[i].PleyerCard.Figure == CardFigure.nine &&
-                        Players[i].PleyerCard.Suite == Trump.Suite)
+                        else if (Players[i].PleyerCard.Figure == CardFigure.nine &&
+                        Players[i].PleyerCard.Suite == Trump)
                         {
                             return Players[i];
                         }
-                        else if(Players[i].PleyerCard.Figure == CardFigure.ten &&
-                        Players[i].PleyerCard.Suite == Trump.Suite)
+                        else if (Players[i].PleyerCard.Figure == CardFigure.ten &&
+                        Players[i].PleyerCard.Suite == Trump)
                         {
                             return Players[i];
                         }
                     }
                 }
-                
+
                 //if (Players[i].PleyerCard.Suite == Trump.Suite&& 
                 //Players[i+1].PleyerCard.Suite == Trump.Suite|| 
                 //Players[i - 1].PleyerCard.Suite == Trump.Suite|| 
@@ -317,7 +294,7 @@ namespace CardGame
                 //    for(int j = 0; j < Players[i].DiscardPile.Count; j++)
                 //    {
                         if (player.PleyerCard.Figure == CardFigure.Jack &&
-                        player.PleyerCard.Suite == Trump.Suite)
+                        player.PleyerCard.Suite == Trump)
                         {
                             playerScore += 20;
                         }
@@ -326,7 +303,7 @@ namespace CardGame
                             playerScore += 2;
                         }
                         if (player.PleyerCard.Figure == CardFigure.nine &&
-                        player.PleyerCard.Suite == Trump.Suite)
+                        player.PleyerCard.Suite == Trump)
                         {
                             playerScore += 14;
                         }
