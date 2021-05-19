@@ -1,0 +1,365 @@
+﻿using Cards;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CardGame
+{
+    public class Game
+    {
+        readonly Random random = new Random();
+        public CardSet Table { get; }
+        //public CardSet DiscardPile { get; }
+        //public CardSet DiscardPileOfSecondPlayer { get; }
+        //public CardSet DiscardPileOfThirdPlayer { get; }
+        public List<Player> Players { get; }
+        public CardSet Deck { get; }
+
+        private Card Trump;
+        private Player activePlayer;
+        public Player ActivePlayer
+        {
+            get
+            {
+                return activePlayer;
+            }
+            set
+            {
+                activePlayer = value;
+                foreach (Player player in Players)
+                {
+                    if (player == activePlayer)
+                        player.HandCards.Show();
+                    else
+                        player.HandCards.Hide();
+                }
+                MarkActivePlayer(activePlayer);
+            }
+        }
+
+        public Action<string> ShowMessage;
+        public Action<Player> MarkActivePlayer;
+        public Action<CardSet> ShowCards;
+        //public Func<string> Reqest;
+        public Func<string, bool> YesOrNo;
+        public Func<Card, Card> UserCardChosen;
+
+        public Game(Action<string> showMessage,
+            Action<Player> markActivePlayer,
+            Action<CardSet> showCards, 
+            params Player[] players)
+        {
+            ShowMessage = showMessage;
+            MarkActivePlayer = markActivePlayer;
+            ShowCards = showCards;
+            Table = GetCardSet();
+            //DiscardPile = GetCardSet();
+            //DiscardPileOfSecondPlayer = GetCardSet();
+            //DiscardPileOfThirdPlayer = GetCardSet();
+            Players = new List<Player>(players);
+            Deck = GetCardSet();
+            Deck.Full(32);
+            
+
+        }
+        public void GoGame()
+        {
+            Start();
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    Move(UserCardChosen(Card),Players[j]);
+                }
+            }
+            GetWinner();
+            
+        }
+
+
+        public void Start()
+        {
+            Deal(6);
+            ActivePlayer = TrumpDefinition();
+            Deal(3);
+            Refresh();
+            
+        }
+
+        public Player TrumpDefinition()
+        {
+            Trump = Deck.Pull(random.Next(0, Deck.Count));//Reqest().Length;
+            for (int i = 0; i<3;i++)
+            {
+                if (YesOrNo("Do you play in this trump?"))
+                {
+                    return Players[i];
+                }
+            }
+            Card card = new Card(Trump.Suite, Trump.Figure);
+            do
+            {
+                Trump = Deck.Pull(random.Next(0, Deck.Count));
+            }
+            while (Trump.Suite == card.Suite);
+            for (int i = 0; i < 3; i++)
+            {
+                if (YesOrNo("Do you play in this trump?"))
+                {
+                    return Players[i];
+                }
+            }
+            return Players[0];
+        }
+
+        public virtual CardSet GetCardSet()
+        {
+            return new CardSet();
+        }
+
+        public void Move(Card card, Player player)
+        {
+
+
+            if (!ActivePlayer.HandCards.Cards.Contains(card)) return;
+            //if()
+            if (Table.Count != 0)
+            {
+                if (Table.Cards[0].Suite != card.Suite && ActivePlayer.HandCards.Cards.FirstOrDefault(c => c.Suite == card.Suite) != null) return;
+
+
+                if (Trump.Suite != card.Suite && ActivePlayer.HandCards.Cards.FirstOrDefault(c => c.Suite == Trump.Suite) != null) return;
+            }
+
+            Table.Add(ActivePlayer.HandCards.Pull(card));
+            player.PleyerCard = card;
+
+            if (Table.Count == 3)
+            {
+                GetInDiscardPile();
+            }
+            ActivePlayer = NextPlayer(ActivePlayer);
+            Refresh();
+
+        }
+
+        private void GetInDiscardPile()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                if (GetWinnerOfRound(Table) == Players[i])
+                {
+                    CardSet Adder= Table; 
+                    Players[i].DiscardPile.Add(Adder.Deal(Table.Count));
+                    Table.GetCardSet();
+                }
+            }
+        }
+
+        private Player GetWinnerOfRound(CardSet table)
+        {
+            int trumpCounter = 0;
+            int tensCounter = 0;
+            for (int i = 0; i < table.Count; i++)
+            {
+                if (table[i].Suite == Trump.Suite)
+                {
+                    trumpCounter++;
+                }
+                if (table[i].Figure == CardFigure.ten)
+                {
+                    tensCounter++;
+                }
+            }
+            
+                
+
+                if (trumpCounter == 1)
+                {
+                  for (int i = 0; i < Players.Count; i++) 
+                  {
+                    if (Players[i].PleyerCard.Suite == Trump.Suite) return Players[i];
+                  }
+                }
+
+            if(trumpCounter > 1)
+            {
+                int usualTrampCounter = 0;
+                for (int i = 0; i < Players.Count; i++)
+                {
+                    if (Players[i].PleyerCard.Figure != CardFigure.nine&& 
+                        Players[i].PleyerCard.Figure != CardFigure.Jack&& 
+                        Players[i].PleyerCard.Figure != CardFigure.ten&&
+                        Players[i].PleyerCard.Suite==Trump.Suite)
+                    {
+                        usualTrampCounter++;
+                    }
+                }
+                if (trumpCounter == usualTrampCounter)
+                {
+
+                    if (Players[0].PleyerCard.Suite == Trump.Suite && Players[1].PleyerCard.Suite == Trump.Suite)
+                    {
+                        return Players[0].PleyerCard.Figure > Players[1].PleyerCard.Figure? Players[0] :  Players[1];
+                    }
+                    else if (Players[1].PleyerCard.Suite == Trump.Suite && Players[2].PleyerCard.Suite == Trump.Suite)
+                    {
+                        return Players[1].PleyerCard.Figure > Players[2].PleyerCard.Figure ?  Players[1] :  Players[2];
+                    }
+                    else if (Players[0].PleyerCard.Suite == Trump.Suite && Players[2].PleyerCard.Suite == Trump.Suite)
+                    {
+                        return Players[0].PleyerCard.Figure > Players[2].PleyerCard.Figure ?  Players[0] :  Players[2];
+                    }
+                }
+                else if(trumpCounter!=usualTrampCounter)
+                {
+                    for (int i = 0; i < Players.Count; i++)
+                    {
+                        if (Players[i].PleyerCard.Figure == CardFigure.Jack &&
+                        Players[i].PleyerCard.Suite == Trump.Suite)
+                        {
+                            return Players[i];
+                        }
+                        else if(Players[i].PleyerCard.Figure == CardFigure.nine &&
+                        Players[i].PleyerCard.Suite == Trump.Suite)
+                        {
+                            return Players[i];
+                        }
+                        else if(Players[i].PleyerCard.Figure == CardFigure.ten &&
+                        Players[i].PleyerCard.Suite == Trump.Suite)
+                        {
+                            return Players[i];
+                        }
+                    }
+                }
+                
+                //if (Players[i].PleyerCard.Suite == Trump.Suite&& 
+                //Players[i+1].PleyerCard.Suite == Trump.Suite|| 
+                //Players[i - 1].PleyerCard.Suite == Trump.Suite|| 
+                //Players[i + 2].PleyerCard.Suite == Trump.Suite|| 
+                //Players[i - 2].PleyerCard.Suite == Trump.Suite)
+                //{
+                //}
+            }
+            for (int i = 0; i < table.Count; i++)
+            {
+                for(int j =0; j<Players.Count;j++)
+                {
+                    if (table[i].Figure == CardFigure.ten)
+                    {
+                        if (table[i].Figure == Players[j].PleyerCard.Figure)
+                            return Players[j];
+                    }
+                }
+                
+            }
+            return PlayerWithMaxCard(); 
+        }
+
+        private Player PlayerWithMaxCard()
+        {
+            if (Players[0].PleyerCard.Figure > Players[1].PleyerCard.Figure|| Players[0].PleyerCard.Figure < Players[1].PleyerCard.Figure)
+            {
+                return Players[0].PleyerCard.Figure > Players[1].PleyerCard.Figure ? Players[0] : Players[1];
+            }
+            if(Players[1].PleyerCard.Figure > Players[2].PleyerCard.Figure || Players[1].PleyerCard.Figure < Players[2].PleyerCard.Figure)
+            {
+                return Players[1].PleyerCard.Figure > Players[2].PleyerCard.Figure ? Players[1] : Players[2];
+            }
+            return Players[0].PleyerCard.Figure > Players[2].PleyerCard.Figure ? Players[0] : Players[2];
+            //> Players[2].PleyerCard :Players[2].PleyerCard; ;
+        }
+
+        public void Refresh()
+        {
+            foreach (var player in Players)
+            {
+                ShowCards(player.HandCards);
+            }
+            ShowCards(Table);
+            
+        }
+
+        private Player NextPlayer(Player player)
+        {
+            if (player == Players[Players.Count - 1]) return Players[0];
+
+            return Players[Players.IndexOf(player) + 1];
+        }
+
+        private Player PreviousPlayer(Player player)
+        {
+            if (player == Players[0]) return Players[Players.Count - 1];
+
+            return Players[Players.IndexOf(player) - 1];
+        }
+
+        public void Deal(int numerOfCards)
+        {
+            Deck.Mix();
+            foreach (var player in Players)
+            {
+                player.HandCards.Add(Deck.Deal(numerOfCards));
+            }
+            Refresh();   
+        }
+        public void GetWinner()
+        {
+            foreach (var player in Players)
+            {
+                int playerScore = 0;
+                foreach (var card in player.DiscardPile.Cards)
+                { 
+                //for(int i =0;i<Players.Count;i++)
+                //{
+                //    for(int j = 0; j < Players[i].DiscardPile.Count; j++)
+                //    {
+                        if (player.PleyerCard.Figure == CardFigure.Jack &&
+                        player.PleyerCard.Suite == Trump.Suite)
+                        {
+                            playerScore += 20;
+                        }
+                        else if (player.PleyerCard.Figure == CardFigure.Jack)
+                        {
+                            playerScore += 2;
+                        }
+                        if (player.PleyerCard.Figure == CardFigure.nine &&
+                        player.PleyerCard.Suite == Trump.Suite)
+                        {
+                            playerScore += 14;
+                        }
+                        if(player.PleyerCard.Figure == CardFigure.Ace)
+                        {
+                            playerScore += 11;
+                        }
+                        if (player.PleyerCard.Figure == CardFigure.ten)
+                        {
+                            playerScore += 10;
+                        }
+                        if(player.PleyerCard.Figure == CardFigure.King)
+                        {
+                            playerScore += 4;
+                        }
+                        if (player.PleyerCard.Figure == CardFigure.Queen)
+                        {
+                            playerScore += 3;
+                        }
+                       //}
+                    //}
+
+                }
+                    
+                if (playerScore>162-playerScore)
+                    ShowMessage(player.Name + "Won with a score" + playerScore);
+            }
+        }
+
+        public void HangUp()
+        {
+            Table.Cards.Clear();
+            Refresh();
+        }
+    }
+}

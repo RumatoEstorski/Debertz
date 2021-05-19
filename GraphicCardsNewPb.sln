@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphicCardsNewPb", "GraphicCardsNewPb\GraphicCardsNewPb.csproj", "{834A041E-A475-4E13-9D84-C4577C066CBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardGame", "GardGame\CardGame.csproj", "{D9D7A204-2B81-4E13-ACF0-B03979D2E618}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Card", "Card\Card.csproj", "{04EC5588-53E3-421F-9481-972C1F2EF413}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{834A041E-A475-4E13-9D84-C4577C066CBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{834A041E-A475-4E13-9D84-C4577C066CBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{834A041E-A475-4E13-9D84-C4577C066CBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{834A041E-A475-4E13-9D84-C4577C066CBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9D7A204-2B81-4E13-ACF0-B03979D2E618}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9D7A204-2B81-4E13-ACF0-B03979D2E618}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9D7A204-2B81-4E13-ACF0-B03979D2E618}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9D7A204-2B81-4E13-ACF0-B03979D2E618}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04EC5588-53E3-421F-9481-972C1F2EF413}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04EC5588-53E3-421F-9481-972C1F2EF413}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04EC5588-53E3-421F-9481-972C1F2EF413}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04EC5588-53E3-421F-9481-972C1F2EF413}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D363D87A-211B-4348-88D6-AAF7825B3C76}
+	EndGlobalSection
+EndGlobal
