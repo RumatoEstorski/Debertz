@@ -14,10 +14,12 @@ namespace GraphicCardsNewPb
     {
         public GraphicGame(Panel pnlDeck,
             Panel pnlTable,
-            Action<string> showMessage, 
+            Action<string> showMessage,
             Action<Player> markActivePlayer,
             Action<CardSet> showCards,
-            params Player[] players) : base(showMessage, markActivePlayer, showCards, players)
+            Func<string, bool> yesOrNo,
+            Func<string, CardSuite> trumpRequest,
+            params Player[] players) : base(showMessage, markActivePlayer, showCards, yesOrNo, trumpRequest, players)
         {
             ((GraphicCardSet)Table).Pnl = pnlTable;
             ((GraphicCardSet)Deck).Pnl = pnlDeck;

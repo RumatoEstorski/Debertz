@@ -27,6 +27,8 @@ namespace GraphicCardsNewPb
                 ShonInfo,
                 MarkActive,
                 ShowCards,
+                YesOrNo, 
+                TrumpRequest,
                 GetPlayers());
 
             foreach (var card in game.Deck.Cards)
@@ -71,7 +73,22 @@ namespace GraphicCardsNewPb
                 new GraphicPlayer() { lblName = lP3, Name = "P3", HandCards = new GraphicCardSet(pnlP3) },
             };
         }
-
+        private bool YesOrNo(string answer)
+        {
+            answer = txtYorN.Text;
+            if (answer == "Y") return true;
+            else if (answer == "N") return false;
+            else throw new Exception("No ansver");
+        }
+        private CardSuite TrumpRequest(string suite)
+        {
+            suite = txtSuit.Text;
+            if (suite == "D" || suite == "Б") return CardSuite.Diamond;
+            else if (suite == "C" || suite == "К") return CardSuite.Club;
+            else if (suite == "H" || suite == "Ч") return CardSuite.Heart;
+            else if (suite == "S" || suite == "П") return CardSuite.Spade;
+            else throw new Exception("No suite");
+        }
         private void ShowCards(CardSet cardSet)
         {
             var cards = cardSet as GraphicCardSet;
@@ -100,5 +117,7 @@ namespace GraphicCardsNewPb
         {
 
         }
+
+        
     }
 }

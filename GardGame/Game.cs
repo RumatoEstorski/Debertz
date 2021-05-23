@@ -50,12 +50,16 @@ namespace CardGame
 
         public Game(Action<string> showMessage,
             Action<Player> markActivePlayer,
-            Action<CardSet> showCards, 
+            Action<CardSet> showCards,
+            Func<string, bool> yesOrNo,
+            Func<string, CardSuite> trumpRequest,
             params Player[] players)
         {
             ShowMessage = showMessage;
             MarkActivePlayer = markActivePlayer;
             ShowCards = showCards;
+            YesOrNo = yesOrNo;
+            TrumpRequest = trumpRequest;
             Table = GetCardSet();
             //DiscardPile = GetCardSet();
             //DiscardPileOfSecondPlayer = GetCardSet();
@@ -63,7 +67,7 @@ namespace CardGame
             Players = new List<Player>(players);
             Deck = GetCardSet();
             Deck.Full(32);
-            
+
 
         }
 

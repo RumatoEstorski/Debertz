@@ -39,6 +39,10 @@
             this.lP3 = new System.Windows.Forms.Label();
             this.lInfo = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
+            this.txtYorN = new System.Windows.Forms.TextBox();
+            this.txtSuit = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // pnlDeck
@@ -78,7 +82,7 @@
             // 
             // bMove
             // 
-            this.bMove.Location = new System.Drawing.Point(891, 26);
+            this.bMove.Location = new System.Drawing.Point(888, 122);
             this.bMove.Name = "bMove";
             this.bMove.Size = new System.Drawing.Size(75, 23);
             this.bMove.TabIndex = 3;
@@ -132,11 +136,48 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // txtYorN
+            // 
+            this.txtYorN.Location = new System.Drawing.Point(1053, 545);
+            this.txtYorN.Name = "txtYorN";
+            this.txtYorN.Size = new System.Drawing.Size(100, 22);
+            this.txtYorN.TabIndex = 9;
+            
+            // 
+            // txtSuit
+            // 
+            this.txtSuit.Location = new System.Drawing.Point(1053, 573);
+            this.txtSuit.Name = "txtSuit";
+            this.txtSuit.Size = new System.Drawing.Size(100, 22);
+            this.txtSuit.TabIndex = 10;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(893, 548);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(154, 17);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "Do you play in this suit:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(915, 576);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(128, 17);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "Enter the card suit:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1416, 657);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.txtSuit);
+            this.Controls.Add(this.txtYorN);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.lInfo);
             this.Controls.Add(this.lP3);
@@ -168,6 +209,10 @@
         private System.Windows.Forms.Label lP3;
         private System.Windows.Forms.Label lInfo;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox txtYorN;
+        private System.Windows.Forms.TextBox txtSuit;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }
 
