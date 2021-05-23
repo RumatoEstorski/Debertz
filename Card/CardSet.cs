@@ -10,6 +10,8 @@ namespace Cards
     {
         readonly Random random = new Random();
 
+        public Card LastCard => Cards.Count > 0 ? Cards[Count - 1] : null;
+
         public CardSet()
         {
             Cards = new List<Card>();
@@ -66,7 +68,7 @@ namespace Cards
         {
             Cards.Clear();
             Full();
-            Cards.Sort();
+            Sort();
             Cards.RemoveRange(0, Cards.Count - amount);
             
         }

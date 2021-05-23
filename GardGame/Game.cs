@@ -75,24 +75,31 @@ namespace CardGame
         public void Start()
         {
             Deal(6);
+
+            Deck.LastCard.Show();
+            Refresh();
+
             MainPlayer = TrumpDefinition();
-            ActivePlayer = MainPlayer;
-            Deal(3);
-            Refresh();            
+
+            //ActivePlayer = MainPlayer;
+            //Deal(3);
+            //Refresh();            
         }
 
         public Player TrumpDefinition()
         {
-            Trump = Deck.Pull(random.Next(0, Deck.Count)).Suite;//Reqest().Length;
+            Trump = Deck.LastCard.Suite;//Reqest().Length;
             foreach (var player in Players)
             {
+                ActivePlayer = player;
                 if (YesOrNo($"Do you play in {Trump}?"))
                 {
                     return player;
                 }
             }
 
-            Trump = TrumpRequest("What card suit do you want?");
+            //цикл игроки по одному
+            Trump = TrumpRequest("What card suit do you want?"); //второй параметр bool
             return Players[0];
         }
 
@@ -255,6 +262,7 @@ namespace CardGame
 
         public void Refresh()
         {
+            ShowCards(Deck);
             foreach (var player in Players)
             {
                 ShowCards(player.HandCards);

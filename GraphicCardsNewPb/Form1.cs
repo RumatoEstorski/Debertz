@@ -75,19 +75,21 @@ namespace GraphicCardsNewPb
         }
         private bool YesOrNo(string answer)
         {
-            answer = txtYorN.Text;
-            if (answer == "Y") return true;
-            else if (answer == "N") return false;
-            else throw new Exception("No ansver");
+            var result = MessageBox.Show(answer, "Choose", MessageBoxButtons.YesNo);
+            return result == DialogResult.Yes;
         }
         private CardSuite TrumpRequest(string suite)
         {
-            suite = txtSuit.Text;
-            if (suite == "D" || suite == "Б") return CardSuite.Diamond;
-            else if (suite == "C" || suite == "К") return CardSuite.Club;
-            else if (suite == "H" || suite == "Ч") return CardSuite.Heart;
-            else if (suite == "S" || suite == "П") return CardSuite.Spade;
-            else throw new Exception("No suite");
+            var form = new TrumpRequestForm(true);
+            form.ShowDialog();
+            return form.Suite;
+
+            //suite = txtSuit.Text;
+            //if (suite == "D" || suite == "Б") return CardSuite.Diamond;
+            //else if (suite == "C" || suite == "К") return CardSuite.Club;
+            //else if (suite == "H" || suite == "Ч") return CardSuite.Heart;
+            //else if (suite == "S" || suite == "П") return CardSuite.Spade;
+            //else throw new Exception("No suite");
         }
         private void ShowCards(CardSet cardSet)
         {
