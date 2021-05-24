@@ -10,6 +10,7 @@ namespace CardGame
     public class Game
     {
         readonly Random random = new Random();
+        bool pass;
         public CardSet Table { get; }
         //public CardSet DiscardPile { get; }
         //public CardSet DiscardPileOfSecondPlayer { get; }
@@ -45,14 +46,14 @@ namespace CardGame
         public Action<CardSet> ShowCards;
         //public Func<string> Reqest;
         public Func<string, bool> YesOrNo;
-        public Func<string, CardSuite> TrumpRequest;
+        public Func<string, bool, CardSuite> TrumpRequest;
         public Player MainPlayer;
 
         public Game(Action<string> showMessage,
             Action<Player> markActivePlayer,
             Action<CardSet> showCards,
             Func<string, bool> yesOrNo,
-            Func<string, CardSuite> trumpRequest,
+            Func<string, bool, CardSuite> trumpRequest,
             params Player[] players)
         {
             ShowMessage = showMessage;
@@ -75,15 +76,13 @@ namespace CardGame
         public void Start()
         {
             Deal(6);
-
             Deck.LastCard.Show();
             Refresh();
-
             MainPlayer = TrumpDefinition();
-
-            //ActivePlayer = MainPlayer;
-            //Deal(3);
-            //Refresh();            
+            ActivePlayer = MainPlayer;
+            Deal(3);
+            Refresh();
+            //Move(ActivePlayer., ActivePlayer);
         }
 
         public Player TrumpDefinition()
@@ -97,10 +96,17 @@ namespace CardGame
                     return player;
                 }
             }
-
             //цикл игроки по одному
-            Trump = TrumpRequest("What card suit do you want?"); //второй параметр bool
-            return Players[0];
+            int count = 0;
+            foreach (var player in Players)
+            {
+                count++;
+                pass = true;
+                if (count == 3) pass = false;
+                Trump = TrumpRequest("What card suit do you want?", pass);
+                return player;
+            }//второй параметр bool
+            return null;//Неуверен что это верно.
         }
 
         public virtual CardSet GetCardSet()

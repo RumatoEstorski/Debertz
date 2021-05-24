@@ -18,7 +18,7 @@ namespace GraphicCardsNewPb
             Action<Player> markActivePlayer,
             Action<CardSet> showCards,
             Func<string, bool> yesOrNo,
-            Func<string, CardSuite> trumpRequest,
+            Func<string, bool, CardSuite> trumpRequest,
             params Player[] players) : base(showMessage, markActivePlayer, showCards, yesOrNo, trumpRequest, players)
         {
             ((GraphicCardSet)Table).Pnl = pnlTable;

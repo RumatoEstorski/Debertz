@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace GraphicCardsNewPb
 {
     public partial class Form1 : Form
@@ -78,9 +79,11 @@ namespace GraphicCardsNewPb
             var result = MessageBox.Show(answer, "Choose", MessageBoxButtons.YesNo);
             return result == DialogResult.Yes;
         }
-        private CardSuite TrumpRequest(string suite)
+        private CardSuite TrumpRequest(string suite, bool pass)
         {
-            var form = new TrumpRequestForm(true);
+            
+            
+            var form = new TrumpRequestForm(pass);
             form.ShowDialog();
             return form.Suite;
 

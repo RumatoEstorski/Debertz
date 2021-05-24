@@ -107,5 +107,17 @@
       <Name>CardGame</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\буба.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Spade.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\крести.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Чирва.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
