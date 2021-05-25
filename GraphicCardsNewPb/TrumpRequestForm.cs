@@ -14,13 +14,17 @@ namespace GraphicCardsNewPb
 
     public partial class TrumpRequestForm : Form
     {
-        public CardSuite Suite { get; set; }
-        bool Pass { get; set; }
+
+        public CardSuite? Suite { get; set; } = null;
+        public bool Pass { get; set; }
         public TrumpRequestForm(bool pass)
         {
+            Random rnd = new Random();
             InitializeComponent();
-            pass = Pass;
-            //button.Visible = pass;
+            Pass = pass;
+            buttonPass.Visible = pass;
+            if (!pass)
+                Suite = (CardSuite)rnd.Next(3);
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -49,7 +53,8 @@ namespace GraphicCardsNewPb
 
         private void buttonPass_Click(object sender, EventArgs e)
         {
-            if (Pass == true) Close();
+            Suite = null;
+            Close();
         }
     }
 }

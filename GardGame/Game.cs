@@ -18,7 +18,7 @@ namespace CardGame
         public List<Player> Players { get; }
         public CardSet Deck { get; }
 
-        private CardSuite Trump;
+        private CardSuite? Trump;
         private Player activePlayer;
 
         public Player ActivePlayer
@@ -46,14 +46,14 @@ namespace CardGame
         public Action<CardSet> ShowCards;
         //public Func<string> Reqest;
         public Func<string, bool> YesOrNo;
-        public Func<string, bool, CardSuite> TrumpRequest;
+        public Func<string, bool, CardSuite?> TrumpRequest;
         public Player MainPlayer;
 
         public Game(Action<string> showMessage,
             Action<Player> markActivePlayer,
             Action<CardSet> showCards,
             Func<string, bool> yesOrNo,
-            Func<string, bool, CardSuite> trumpRequest,
+            Func<string, bool, CardSuite?> trumpRequest,
             params Player[] players)
         {
             ShowMessage = showMessage;
@@ -69,44 +69,44 @@ namespace CardGame
             Deck = GetCardSet();
             Deck.Full(32);
 
-
         }
 
 
         public void Start()
         {
+            Deck.Mix();
+            Player lastPlayer = Players[0];
             Deal(6);
             Deck.LastCard.Show();
             Refresh();
-            MainPlayer = TrumpDefinition();
-            ActivePlayer = MainPlayer;
+            MainPlayer = TrumpDefinition(lastPlayer);
             Deal(3);
+            ActivePlayer = MainPlayer;
             Refresh();
-            //Move(ActivePlayer., ActivePlayer);
         }
 
-        public Player TrumpDefinition()
+        public Player TrumpDefinition(Player lastPlayer)
         {
             Trump = Deck.LastCard.Suite;//Reqest().Length;
-            foreach (var player in Players)
+            ActivePlayer = lastPlayer;
+            do
             {
-                ActivePlayer = player;
+                ActivePlayer = NextPlayer(ActivePlayer);
                 if (YesOrNo($"Do you play in {Trump}?"))
                 {
-                    return player;
+                    return ActivePlayer;
                 }
-            }
-            //цикл игроки по одному
-            int count = 0;
-            foreach (var player in Players)
+                
+            } while (ActivePlayer != lastPlayer);
+
+
+            do
             {
-                count++;
-                pass = true;
-                if (count == 3) pass = false;
-                Trump = TrumpRequest("What card suit do you want?", pass);
-                return player;
-            }//второй параметр bool
-            return null;//Неуверен что это верно.
+                ActivePlayer = NextPlayer(ActivePlayer);
+                Trump = TrumpRequest("What card suit do you want?", ActivePlayer != lastPlayer);
+                if (Trump != null) return ActivePlayer;
+            } while (ActivePlayer != lastPlayer);
+            return lastPlayer;
         }
 
         public virtual CardSet GetCardSet()
@@ -121,10 +121,18 @@ namespace CardGame
             //if()
             if (Table.Count != 0)
             {
-                if (Table.Cards[0].Suite != card.Suite && ActivePlayer.HandCards.Cards.FirstOrDefault(c => c.Suite == card.Suite) != null) return;
+                if (Table.Cards[0].Suite != card.Suite)
+                {
+                    if (ActivePlayer.HandCards.Cards.FirstOrDefault(c => c.Suite == Table.Cards[0].Suite) != null)
+                    {
+                        ShowMessage($"У тебя есть {Table.Cards[0].Suite}, ты должен класть ее");
+                        //дописать другие причины
+                        return;
+                    }
 
 
-                if (Trump != card.Suite && ActivePlayer.HandCards.Cards.FirstOrDefault(c => c.Suite == Trump) != null) return;
+                    if (Trump != card.Suite && ActivePlayer.HandCards.Cards.FirstOrDefault(c => c.Suite == Trump) != null) return;
+                }
             }
 
             Table.Add(ActivePlayer.HandCards.Pull(card));
@@ -293,7 +301,6 @@ namespace CardGame
 
         public void Deal(int numerOfCards)
         {
-            Deck.Mix();
             foreach (var player in Players)
             {
                 player.HandCards.Add(Deck.Deal(numerOfCards));

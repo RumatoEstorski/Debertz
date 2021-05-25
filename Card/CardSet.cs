@@ -8,7 +8,7 @@ namespace Cards
 {
     public class CardSet
     {
-        readonly Random random = new Random();
+        static readonly Random random = new Random();
 
         public Card LastCard => Cards.Count > 0 ? Cards[Count - 1] : null;
 
@@ -83,7 +83,7 @@ namespace Cards
             Card card;
             for (int i = 0; i < count; i++)
             {
-                for (int j = 0; j < Count - 1; j++)
+                for (int j = 0; j < Count; j++)
                 {
                     int numberOfCard = random.Next(0, Cards.Count - 1);
                     card = Cards[j];

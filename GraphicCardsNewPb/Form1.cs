@@ -41,7 +41,7 @@ namespace GraphicCardsNewPb
 
         private void button1_Click(object sender, EventArgs e)
         {
-            game.Move(activeCard, activePlayer);
+            game.Move(activeCard, game.ActivePlayer);
             bMove.Visible = false;
         }
 
@@ -79,9 +79,8 @@ namespace GraphicCardsNewPb
             var result = MessageBox.Show(answer, "Choose", MessageBoxButtons.YesNo);
             return result == DialogResult.Yes;
         }
-        private CardSuite TrumpRequest(string suite, bool pass)
-        {
-            
+        private CardSuite? TrumpRequest(string suite, bool pass)
+        {          
             
             var form = new TrumpRequestForm(pass);
             form.ShowDialog();

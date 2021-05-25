@@ -12,7 +12,7 @@ namespace CardGame
     {
         public virtual string Name { get; set; }
         public CardSet HandCards { get; set; }
-        public CardSet DiscardPile { get; set; }
+        public CardSet DiscardPile { get; set; } = new CardSet();
         public Card PleyerCard { get; set; }
 
     }
