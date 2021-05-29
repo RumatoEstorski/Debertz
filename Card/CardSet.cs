@@ -93,6 +93,14 @@ namespace Cards
             }
         }
 
+        public void Clean()
+        {
+            for (int i = Count - 1; i > -1; i--)
+            {
+                Cards.RemoveAt(i);
+            }
+        }
+
         public void Sort()
         {
             Cards.Sort((card1, card2) =>

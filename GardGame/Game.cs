@@ -1,4 +1,5 @@
 ﻿using Cards;
+using GardGame;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace CardGame
 
         private CardSuite? Trump;
         private Player activePlayer;
+        private IComparer<Card> comparer;
 
         public Player ActivePlayer
         {
@@ -81,6 +83,7 @@ namespace CardGame
             Refresh();
             MainPlayer = TrumpDefinition(lastPlayer);
             Deal(3);
+            
             ActivePlayer = MainPlayer;
             Refresh();
         }
@@ -136,6 +139,10 @@ namespace CardGame
                     }
                 }
             }
+            else
+            {
+                comparer = new DebertzRoundCompairer((CardSuite)Trump, card.Suite);
+            }
 
             Table.Add(ActivePlayer.HandCards.Pull(card));
             player.PleyerCard = card;
@@ -143,19 +150,24 @@ namespace CardGame
             if (Table.Count == Players.Count)
             {
                 GetInDiscardPile();
+                //CheckEnd
             }
-            ActivePlayer = NextPlayer(ActivePlayer);
+            else
+            {
+                ActivePlayer = NextPlayer(ActivePlayer);
+            }
             Refresh();
 
         }
 
         private void GetInDiscardPile()
         {
-            ActivePlayer = GetWinnerOfRound(Table);
-            Refresh();
-            CardSet Adder = Table;
-            GetWinnerOfRound(Table).DiscardPile.Add(Adder.Deal(Table.Count));
-            Table.GetCardSet();
+            Table.Cards.Sort(comparer);
+            Card maxCard = Table.LastCard;
+            Player winner = Players.First(p => p.PleyerCard == maxCard);
+            winner.DiscardPile.Add(Table);
+            Table.Clean();
+            ActivePlayer = winner;
         }
 
         private Player GetWinnerOfRound(CardSet table)
@@ -378,55 +390,43 @@ namespace CardGame
             }
             Refresh();   
         }
-        public void GetWinner()
+        public Player GetWinner()
         {
+            Player winner = Players[0];
+
+
             foreach (var player in Players)
             {
-                int playerScore = 0;
-                foreach (var card in player.DiscardPile.Cards)
-                { 
-                //for(int i =0;i<Players.Count;i++)
-                //{
-                //    for(int j = 0; j < Players[i].DiscardPile.Count; j++)
-                //    {
-                        if (player.PleyerCard.Figure == CardFigure.Jack &&
-                        player.PleyerCard.Suite == Trump)
-                        {
-                            playerScore += 20;
-                        }
-                        else if (player.PleyerCard.Figure == CardFigure.Jack)
-                        {
-                            playerScore += 2;
-                        }
-                        if (player.PleyerCard.Figure == CardFigure.nine &&
-                        player.PleyerCard.Suite == Trump)
-                        {
-                            playerScore += 14;
-                        }
-                        if(player.PleyerCard.Figure == CardFigure.Ace)
-                        {
-                            playerScore += 11;
-                        }
-                        if (player.PleyerCard.Figure == CardFigure.ten)
-                        {
-                            playerScore += 10;
-                        }
-                        if(player.PleyerCard.Figure == CardFigure.King)
-                        {
-                            playerScore += 4;
-                        }
-                        if (player.PleyerCard.Figure == CardFigure.Queen)
-                        {
-                            playerScore += 3;
-                        }
-                       //}
-                    //}
-
-                }
-                    
-                if (playerScore>162-playerScore)
-                    ShowMessage(player.Name + "Won with a score" + playerScore);
+                if (CardsPoints(player.DiscardPile) > CardsPoints(winner.DiscardPile))
+                    winner = player;
             }
+
+            return winner;
+        }
+
+        private int CardsPoints(CardSet cardSet)
+        {
+            int points = 0;
+            foreach (var item in cardSet.Cards)
+            {
+                points += Value(item);
+            }
+            return points;
+        }
+
+        private int Value(Card card)
+        {
+            if(card.Suite == Trump && card.Figure == CardFigure.Jack)
+            {
+                return 20;
+            }
+            if (card.Suite == Trump && card.Figure == CardFigure.nine)
+            {
+                return 14;
+            }
+            if (card.Figure == CardFigure.Ace) return 11;
+            if ((int)card.Figure >= 11) return (int)card.Figure - 9;
+            else return 0;
         }
 
         public void HangUp()
