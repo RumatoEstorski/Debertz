@@ -129,9 +129,11 @@ namespace CardGame
                         //дописать другие причины
                         return;
                     }
-
-
-                    if (Trump != card.Suite && ActivePlayer.HandCards.Cards.FirstOrDefault(c => c.Suite == Trump) != null) return;
+                    else if (Trump != card.Suite && ActivePlayer.HandCards.Cards.FirstOrDefault(c => c.Suite == Trump) != null)
+                    {
+                        ShowMessage($"У тебя есть {Trump}, ты должен класть ее");
+                        return;
+                    }
                 }
             }
 
@@ -149,92 +151,121 @@ namespace CardGame
 
         private void GetInDiscardPile()
         {
-            for (int i = 0; i < 3; i++)
-            {
-                if (GetWinnerOfRound(Table) == Players[i])
-                {
-                    CardSet Adder= Table; 
-                    Players[i].DiscardPile.Add(Adder.Deal(Table.Count));
-                    Table.GetCardSet();
-                }
-            }
+            ActivePlayer = GetWinnerOfRound(Table);
+            Refresh();
+            CardSet Adder = Table;
+            GetWinnerOfRound(Table).DiscardPile.Add(Adder.Deal(Table.Count));
+            Table.GetCardSet();
         }
 
         private Player GetWinnerOfRound(CardSet table)
         {
             int trumpCounter = 0;
-            int tensCounter = 0;
             for (int i = 0; i < table.Count; i++)
             {
                 if (table[i].Suite == Trump)
                 {
                     trumpCounter++;
                 }
-                if (table[i].Figure == CardFigure.ten)
+                
+            }
+            if (trumpCounter == 1)
+            {
+                foreach (var player in Players)
                 {
-                    tensCounter++;
+                    if (player.PleyerCard.Suite == Trump) return player;
                 }
             }
-            
-                
-
-                if (trumpCounter == 1)
-                {
-                  for (int i = 0; i < Players.Count; i++) 
-                  {
-                    if (Players[i].PleyerCard.Suite == Trump) return Players[i];
-                  }
-                }
 
             if (trumpCounter > 1)
             {
                 int usualTrampCounter = 0;
-                for (int i = 0; i < Players.Count; i++)
+                foreach (var player in Players)
                 {
-                    if (Players[i].PleyerCard.Figure != CardFigure.nine &&
-                        Players[i].PleyerCard.Figure != CardFigure.Jack &&
-                        Players[i].PleyerCard.Figure != CardFigure.ten &&
-                        Players[i].PleyerCard.Suite == Trump)
+                    if (player.PleyerCard.Figure != CardFigure.nine &&
+                        player.PleyerCard.Figure != CardFigure.Jack &&
+                        player.PleyerCard.Figure != CardFigure.ten &&
+                        player.PleyerCard.Figure != CardFigure.Ace &&
+                        player.PleyerCard.Suite == Trump)
                     {
                         usualTrampCounter++;
                     }
                 }
                 if (trumpCounter == usualTrampCounter)
                 {
-
-                    if (Players[0].PleyerCard.Suite == Trump && Players[1].PleyerCard.Suite == Trump)
+                    
+                    for (int x = 0; x < Players.Count; x++)
                     {
-                        return Players[0].PleyerCard.Figure > Players[1].PleyerCard.Figure ? Players[0] : Players[1];
+                        int count = 0;
+                        for (int y = 0; y < Players.Count; y++)
+                        {
+                            if (Players[x].PleyerCard.Suite == Trump && Players[y].PleyerCard.Suite == Trump)
+                            {
+                                if (Players[x].PleyerCard.Figure < Players[y].PleyerCard.Figure) break;
+                                else count++;
+                            }
+                        }
+                        if (count == Players.Count) return Players[x];
                     }
-                    else if (Players[1].PleyerCard.Suite == Trump && Players[2].PleyerCard.Suite == Trump)
-                    {
-                        return Players[1].PleyerCard.Figure > Players[2].PleyerCard.Figure ? Players[1] : Players[2];
-                    }
-                    else if (Players[0].PleyerCard.Suite == Trump && Players[2].PleyerCard.Suite == Trump)
-                    {
-                        return Players[0].PleyerCard.Figure > Players[2].PleyerCard.Figure ? Players[0] : Players[2];
-                    }
+                    
+                    //if (Players[0].PleyerCard.Suite == Trump && Players[1].PleyerCard.Suite == Trump)
+                    //{
+                    //    return Players[0].PleyerCard.Figure > Players[1].PleyerCard.Figure ? Players[0] : Players[1];
+                    //}
+                    //else if (Players[1].PleyerCard.Suite == Trump && Players[2].PleyerCard.Suite == Trump)
+                    //{
+                    //    return Players[1].PleyerCard.Figure > Players[2].PleyerCard.Figure ? Players[1] : Players[2];
+                    //}
+                    //else if (Players[0].PleyerCard.Suite == Trump && Players[2].PleyerCard.Suite == Trump)
+                    //{
+                    //    return Players[0].PleyerCard.Figure > Players[2].PleyerCard.Figure ? Players[0] : Players[2];
+                    //}
                 }
                 else if (trumpCounter != usualTrampCounter)
                 {
-                    for (int i = 0; i < Players.Count; i++)
+                    int jackCounter = 0;
+                    int trampTensCounter = 0;
+                    int trampAseCounter = 0;
+                    int ninesCounter = 0;
+                    for (int i = 0; i < table.Count; i++)
                     {
-                        if (Players[i].PleyerCard.Figure == CardFigure.Jack &&
-                        Players[i].PleyerCard.Suite == Trump)
+                        if (table[i].Suite==Trump)
                         {
-                            return Players[i];
-                        }
-                        else if (Players[i].PleyerCard.Figure == CardFigure.nine &&
-                        Players[i].PleyerCard.Suite == Trump)
-                        {
-                            return Players[i];
-                        }
-                        else if (Players[i].PleyerCard.Figure == CardFigure.ten &&
-                        Players[i].PleyerCard.Suite == Trump)
-                        {
-                            return Players[i];
+                            if (table[i].Figure == CardFigure.ten) trampTensCounter++;
+                            if (table[i].Figure == CardFigure.Ace) trampAseCounter++;
+                            if (table[i].Figure == CardFigure.nine) ninesCounter++;
+                            if (table[i].Figure == CardFigure.Jack) jackCounter++;
                         }
                     }
+                    foreach (var player in Players)
+                    {
+                        if (player.PleyerCard.Suite == Trump)
+                        {
+
+                            if (player.PleyerCard.Figure == CardFigure.Jack)
+                            {
+                                return player;
+                            }
+                            else if (player.PleyerCard.Figure == CardFigure.nine && jackCounter == 0)
+                            {
+                                return player;
+                            }
+                            else if(player.PleyerCard.Figure ==CardFigure.Ace&&
+                                ninesCounter == 0 && jackCounter == 0)
+                            {
+                                return player;
+                            }
+                            else if (player.PleyerCard.Figure == CardFigure.ten &&
+                                trampAseCounter == 0&&
+                                ninesCounter==0&&
+                                jackCounter==0)
+                            {
+                                return player;
+                            }
+                        }
+                    }
+                        
+                    
                 }
 
                 //if (Players[i].PleyerCard.Suite == Trump.Suite&& 
@@ -245,20 +276,60 @@ namespace CardGame
                 //{
                 //}
             }
+            int tensCounter = 0;
+            int aseCounter = 0;
             for (int i = 0; i < table.Count; i++)
             {
-                for(int j =0; j<Players.Count;j++)
+                if (table[i].Figure == CardFigure.ten) tensCounter++;
+                if (table[i].Figure == CardFigure.Ace) aseCounter++;
+            }
+            foreach (var player in Players)
+            {
+                if (player.PleyerCard.Figure == CardFigure.Ace)
                 {
-                    if (table[i].Figure == CardFigure.ten)
-                    {
-                        if (table[i].Figure == Players[j].PleyerCard.Figure)
-                            return Players[j];
-                    }
+                    return player;
                 }
-                
+                else if (player.PleyerCard.Figure == CardFigure.ten &&
+                    aseCounter == 0)
+                {
+                    return player;
+                }
+            }
+            int countFailCards = 0;
+            for (int i = 0; i < table.Count; i++)
+            {
+                if (table[0].Suite != table[i].Suite)
+                    countFailCards++;
+
+            }
+            if (countFailCards == Players.Count - 1) return Players[0];
+            else if (countFailCards == 1) 
+            {
+                for (int i = 0; i < table.Count; i++)
+                {
+                    if (table[0].Suite != table[i].Suite)
+                        countFailCards++;
+                    if (countFailCards == 1)
+                        table[i].Figure = 0;
+                }
+            }
+            if (tensCounter == 0 && aseCounter == 0)
+            {
+                for (int x = 0; x < Players.Count; x++)
+                {
+                    int count = 0;
+                    for (int y = 0; y < Players.Count; y++)
+                    {
+                        if (Players[x].PleyerCard.Figure < Players[y].PleyerCard.Figure) break;
+                        else count++;
+                    }
+                    if (count == Players.Count) return Players[x];
+                }
             }
             return PlayerWithMaxCard(); 
         }
+
+        
 
         private Player PlayerWithMaxCard()
         {
