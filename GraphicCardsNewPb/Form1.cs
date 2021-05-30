@@ -28,7 +28,8 @@ namespace GraphicCardsNewPb
                 ShonInfo,
                 MarkActive,
                 ShowCards,
-                YesOrNo, 
+                GetGameWinner,
+                YesOrNo,
                 TrumpRequest,
                 GetPlayers());
 
@@ -36,6 +37,15 @@ namespace GraphicCardsNewPb
             {
                 PictureBox pb = ((GraphicCard)card).Pb;
                 pb.MouseClick += Card_Select;
+            }
+        }
+
+        private void GetGameWinner(Player winner)
+        {
+            if (winner != null)
+            {
+                MessageBox.Show($"Congratulations, {winner.Name}! You are won!");
+                Close();
             }
         }
 
@@ -69,14 +79,15 @@ namespace GraphicCardsNewPb
         {
             return new Player[] 
             {
-                new GraphicPlayer() { lblName = lP1, Name = "P1", HandCards = new GraphicCardSet(pnlP1) },
-                new GraphicPlayer() { lblName = lP2, Name = "P2", HandCards = new GraphicCardSet(pnlP2) },
-                new GraphicPlayer() { lblName = lP3, Name = "P3", HandCards = new GraphicCardSet(pnlP3) },
+                new GraphicPlayer() { lblName = lP1, Name = "Player1", HandCards = new GraphicCardSet(pnlP1) },
+                new GraphicPlayer() { lblName = lP2, Name = "Player2", HandCards = new GraphicCardSet(pnlP2) },
+                new GraphicPlayer() { lblName = lP3, Name = "Player3", HandCards = new GraphicCardSet(pnlP3) },
             };
         }
-        private bool YesOrNo(string answer)
+        private bool YesOrNo(string answer, CardSuite? trump)
         {
             var result = MessageBox.Show(answer, "Choose", MessageBoxButtons.YesNo);
+            TrumpSuite.Text = trump.ToString();
             return result == DialogResult.Yes;
         }
         private CardSuite? TrumpRequest(string suite, bool pass)
@@ -84,6 +95,7 @@ namespace GraphicCardsNewPb
             
             var form = new TrumpRequestForm(pass);
             form.ShowDialog();
+            TrumpSuite.Text = form.Suite.ToString();
             return form.Suite;
 
             //suite = txtSuit.Text;
@@ -122,6 +134,14 @@ namespace GraphicCardsNewPb
 
         }
 
-        
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pnlDeck_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

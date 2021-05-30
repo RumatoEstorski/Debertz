@@ -119,5 +119,23 @@
   <ItemGroup>
     <None Include="Resources\Чирва.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\images\Салтовка.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\images\Салтовка12.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\images\КОлоДА.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\images\Колда.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\images\фон формы.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\images\фон 2ю0.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

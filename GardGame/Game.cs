@@ -12,6 +12,7 @@ namespace CardGame
     {
         readonly Random random = new Random();
         bool pass;
+        int countMove;
         public CardSet Table { get; }
         //public CardSet DiscardPile { get; }
         //public CardSet DiscardPileOfSecondPlayer { get; }
@@ -46,21 +47,24 @@ namespace CardGame
         public Action<string> ShowMessage;
         public Action<Player> MarkActivePlayer;
         public Action<CardSet> ShowCards;
+        public Action<Player> GetGameWinner;
         //public Func<string> Reqest;
-        public Func<string, bool> YesOrNo;
+        public Func<string, CardSuite?, bool> YesOrNo;
         public Func<string, bool, CardSuite?> TrumpRequest;
         public Player MainPlayer;
 
         public Game(Action<string> showMessage,
             Action<Player> markActivePlayer,
             Action<CardSet> showCards,
-            Func<string, bool> yesOrNo,
+            Action<Player> getGameWinner,
+            Func<string, CardSuite?, bool> yesOrNo,
             Func<string, bool, CardSuite?> trumpRequest,
             params Player[] players)
         {
             ShowMessage = showMessage;
             MarkActivePlayer = markActivePlayer;
             ShowCards = showCards;
+            GetGameWinner = getGameWinner;
             YesOrNo = yesOrNo;
             TrumpRequest = trumpRequest;
             Table = GetCardSet();
@@ -76,6 +80,7 @@ namespace CardGame
 
         public void Start()
         {
+            countMove = 0;
             Deck.Mix();
             Player lastPlayer = Players[0];
             Deal(6);
@@ -83,9 +88,10 @@ namespace CardGame
             Refresh();
             MainPlayer = TrumpDefinition(lastPlayer);
             Deal(3);
-            
             ActivePlayer = MainPlayer;
             Refresh();
+            
+            
         }
 
         public Player TrumpDefinition(Player lastPlayer)
@@ -95,7 +101,7 @@ namespace CardGame
             do
             {
                 ActivePlayer = NextPlayer(ActivePlayer);
-                if (YesOrNo($"Do you play in {Trump}?"))
+                if (YesOrNo($"Do you play in {Trump}?", Trump))
                 {
                     return ActivePlayer;
                 }
@@ -150,7 +156,7 @@ namespace CardGame
             if (Table.Count == Players.Count)
             {
                 GetInDiscardPile();
-                //CheckEnd
+                GetGameWinner(CheckEnd());
             }
             else
             {
@@ -158,6 +164,17 @@ namespace CardGame
             }
             Refresh();
 
+        }
+
+        private Player CheckEnd()
+        {
+            countMove++;
+            if (countMove == 9)
+            {
+                return GetWinner();
+            }
+            else return null;
+            
         }
 
         private void GetInDiscardPile()
@@ -400,7 +417,7 @@ namespace CardGame
                 if (CardsPoints(player.DiscardPile) > CardsPoints(winner.DiscardPile))
                     winner = player;
             }
-
+            
             return winner;
         }
 

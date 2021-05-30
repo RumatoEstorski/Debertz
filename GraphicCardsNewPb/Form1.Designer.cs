@@ -39,21 +39,22 @@
             this.lP3 = new System.Windows.Forms.Label();
             this.lInfo = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
-            this.txtYorN = new System.Windows.Forms.TextBox();
-            this.txtSuit = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.TrumpSuite = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // pnlDeck
             // 
+            this.pnlDeck.BackgroundImage = global::GraphicCardsNewPb.Properties.Resources.Колда;
+            this.pnlDeck.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pnlDeck.Location = new System.Drawing.Point(85, 175);
             this.pnlDeck.Name = "pnlDeck";
             this.pnlDeck.Size = new System.Drawing.Size(175, 230);
             this.pnlDeck.TabIndex = 0;
+            this.pnlDeck.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlDeck_Paint);
             // 
             // pnlP1
             // 
+            this.pnlP1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.pnlP1.Location = new System.Drawing.Point(329, 63);
             this.pnlP1.Name = "pnlP1";
             this.pnlP1.Size = new System.Drawing.Size(491, 146);
@@ -61,6 +62,7 @@
             // 
             // pnlP2
             // 
+            this.pnlP2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.pnlP2.Location = new System.Drawing.Point(874, 259);
             this.pnlP2.Name = "pnlP2";
             this.pnlP2.Size = new System.Drawing.Size(491, 146);
@@ -68,6 +70,7 @@
             // 
             // pnlP3
             // 
+            this.pnlP3.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.pnlP3.Location = new System.Drawing.Point(329, 470);
             this.pnlP3.Name = "pnlP3";
             this.pnlP3.Size = new System.Drawing.Size(491, 146);
@@ -75,6 +78,7 @@
             // 
             // pnlTable
             // 
+            this.pnlTable.BackColor = System.Drawing.Color.Silver;
             this.pnlTable.Location = new System.Drawing.Point(318, 259);
             this.pnlTable.Name = "pnlTable";
             this.pnlTable.Size = new System.Drawing.Size(491, 146);
@@ -82,7 +86,7 @@
             // 
             // bMove
             // 
-            this.bMove.Location = new System.Drawing.Point(888, 122);
+            this.bMove.Location = new System.Drawing.Point(1329, 41);
             this.bMove.Name = "bMove";
             this.bMove.Size = new System.Drawing.Size(75, 23);
             this.bMove.TabIndex = 3;
@@ -128,7 +132,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1087, 122);
+            this.button2.Location = new System.Drawing.Point(1329, 12);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 8;
@@ -136,53 +140,29 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // txtYorN
+            // TrumpSuite
             // 
-            this.txtYorN.Location = new System.Drawing.Point(1053, 545);
-            this.txtYorN.Name = "txtYorN";
-            this.txtYorN.Size = new System.Drawing.Size(100, 22);
-            this.txtYorN.TabIndex = 9;
-            // 
-            // txtSuit
-            // 
-            this.txtSuit.Location = new System.Drawing.Point(1053, 573);
-            this.txtSuit.Name = "txtSuit";
-            this.txtSuit.Size = new System.Drawing.Size(100, 22);
-            this.txtSuit.TabIndex = 10;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(893, 548);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(154, 17);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "Do you play in this suit:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(915, 576);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(128, 17);
-            this.label2.TabIndex = 12;
-            this.label2.Text = "Enter the card suit:";
+            this.TrumpSuite.AutoSize = true;
+            this.TrumpSuite.Location = new System.Drawing.Point(132, 155);
+            this.TrumpSuite.Name = "TrumpSuite";
+            this.TrumpSuite.Size = new System.Drawing.Size(81, 17);
+            this.TrumpSuite.TabIndex = 12;
+            this.TrumpSuite.Text = "TrumpSuite";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = global::GraphicCardsNewPb.Properties.Resources.Салтовка12;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1416, 657);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.txtSuit);
-            this.Controls.Add(this.txtYorN);
+            this.Controls.Add(this.TrumpSuite);
+            this.Controls.Add(this.bMove);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.lInfo);
             this.Controls.Add(this.lP3);
             this.Controls.Add(this.lP2);
             this.Controls.Add(this.lP1);
-            this.Controls.Add(this.bMove);
             this.Controls.Add(this.pnlTable);
             this.Controls.Add(this.pnlP3);
             this.Controls.Add(this.pnlP2);
@@ -190,6 +170,7 @@
             this.Controls.Add(this.pnlDeck);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -208,10 +189,7 @@
         private System.Windows.Forms.Label lP3;
         private System.Windows.Forms.Label lInfo;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox txtYorN;
-        private System.Windows.Forms.TextBox txtSuit;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label TrumpSuite;
     }
 }
 

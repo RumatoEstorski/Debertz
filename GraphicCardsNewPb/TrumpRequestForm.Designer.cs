@@ -29,16 +29,37 @@ namespace GraphicCardsNewPb
         /// </summary>
         private void InitializeComponent()
         {
+            this.buttonPass = new System.Windows.Forms.Button();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.buttonPass = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.SuspendLayout();
+            // 
+            // buttonPass
+            // 
+            this.buttonPass.Location = new System.Drawing.Point(423, 325);
+            this.buttonPass.Name = "buttonPass";
+            this.buttonPass.Size = new System.Drawing.Size(75, 23);
+            this.buttonPass.TabIndex = 4;
+            this.buttonPass.Text = "Pass";
+            this.buttonPass.UseVisualStyleBackColor = true;
+            this.buttonPass.Click += new System.EventHandler(this.buttonPass_Click);
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.Image = global::GraphicCardsNewPb.Properties.Resources.Чирва;
+            this.pictureBox4.Location = new System.Drawing.Point(491, 44);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(186, 214);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox4.TabIndex = 3;
+            this.pictureBox4.TabStop = false;
+            this.pictureBox4.Click += new System.EventHandler(this.pictureBox4_Click);
             // 
             // pictureBox3
             // 
@@ -78,43 +99,25 @@ namespace GraphicCardsNewPb
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
-            // pictureBox4
-            // 
-            this.pictureBox4.Image = global::GraphicCardsNewPb.Properties.Resources.Чирва;
-            this.pictureBox4.Location = new System.Drawing.Point(491, 44);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(186, 214);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox4.TabIndex = 3;
-            this.pictureBox4.TabStop = false;
-            this.pictureBox4.Click += new System.EventHandler(this.pictureBox4_Click);
-            // 
-            // buttonPass
-            // 
-            this.buttonPass.Location = new System.Drawing.Point(423, 325);
-            this.buttonPass.Name = "buttonPass";
-            this.buttonPass.Size = new System.Drawing.Size(75, 23);
-            this.buttonPass.TabIndex = 4;
-            this.buttonPass.Text = "Pass";
-            this.buttonPass.UseVisualStyleBackColor = true;
-            this.buttonPass.Click += new System.EventHandler(this.buttonPass_Click);
-            // 
             // TrumpRequestForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = global::GraphicCardsNewPb.Properties.Resources.фон_2ю0;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(908, 396);
             this.Controls.Add(this.buttonPass);
             this.Controls.Add(this.pictureBox4);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
+            this.DoubleBuffered = true;
             this.Name = "TrumpRequestForm";
             this.Text = "TrumpRequestForm";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.ResumeLayout(false);
 
         }
